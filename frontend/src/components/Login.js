@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Box } from '@mui/material';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -17,13 +18,24 @@ function Login() {
     }
   };
 
+  const handleRegister = async () => {
+    navigate('/register');
+  };
+
   return (
-    <div>
+    <Box
+      display="flex"
+      flexDirection="column"
+      maxWidth={300}
+      margin="auto"
+      padding={2}
+    >
       <h2>Login</h2>
-      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
-    </div>
+      <TextField label="Email" variant="outlined" margin="normal" onChange={(e) => setEmail(e.target.value)} />
+      <TextField label="Password" type="password" variant="outlined" margin="normal" onChange={(e) => setPassword(e.target.value)} />
+      <Button variant="contained" color="primary" style={{ marginTop: 16 }} onClick={handleLogin}>Login</Button>
+      <Button variant="contained" color="primary" style={{ marginTop: 16 }} onClick={handleRegister}>Register</Button>
+    </Box>
   );
 }
 

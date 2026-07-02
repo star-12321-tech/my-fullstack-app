@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Dashboard() {
-  const [message, setMessage] = useState('');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/dashboard', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setMessage(response.data.message);
-    };
-    fetchData();
+    const token = localStorage.getItem('token');
+
+    axios.get('http://localhost:5000/api/auth/userinfo', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(res => {      
+      setUser(res.data.user);
+    })
+    .catch(err => {
+      console.error('Error fetching user info:', err);
+    });
   }, []);
+
+  if (!user) return <div>Loading...</div>;
 
   return (
     <div>
-      <h2>Dashboard</h2>
-      <p>{message}</p>
+      <h1>Dashboard</h1>
+      <p>Welcome, {user.userName}</p>
+      {/* Display other user info */}
     </div>
   );
 }

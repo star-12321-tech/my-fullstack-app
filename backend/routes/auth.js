@@ -1,4 +1,6 @@
 const express = require('express');
+const authenticateToken = require('../middleware/auth');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
@@ -30,10 +32,16 @@ router.post('/login', (req, res) => {
     bcrypt.compare(password, user.password_hash, (err, isMatch) => {
       if (err || !isMatch)
         return res.status(400).json({ message: 'Invalid email or password' });
-      const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id, userName: user.username }, jwtSecret, { expiresIn: '1h' });
       res.json({ token });
     });
   });
+});
+
+// Get userinfo
+router.get('/userinfo', authenticateToken, (req, res) => {
+  // 'req.user' contains user info from token
+  res.json({ user: req.user });
 });
 
 module.exports = router;
