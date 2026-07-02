@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box } from '@mui/material';
+import { Container, Box, TextField, Button, Typography } from '@mui/material';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -23,19 +23,62 @@ function Login() {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      maxWidth={300}
-      margin="auto"
-      padding={2}
+    <Container 
+      maxWidth="xs"
+      sx={{
+        height: '100vh', // full viewport height
+        display: 'flex', // enable flexbox
+        alignItems: 'center', // vertical centering
+        justifyContent: 'center', // horizontal centering
+      }}
     >
-      <h2>Login</h2>
-      <TextField label="Email" variant="outlined" margin="normal" onChange={(e) => setEmail(e.target.value)} />
-      <TextField label="Password" type="password" variant="outlined" margin="normal" onChange={(e) => setPassword(e.target.value)} />
-      <Button variant="contained" color="primary" style={{ marginTop: 16 }} onClick={handleLogin}>Login</Button>
-      <Button variant="contained" color="primary" style={{ marginTop: 16 }} onClick={handleRegister}>Register</Button>
-    </Box>
+      <Box
+        sx={{
+          padding: 3,
+          boxShadow: 3,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h5" component="h1" gutterBottom>
+          Login
+        </Typography>
+        <TextField
+          label="Email"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={handleRegister}
+        >
+          Register
+        </Button>
+      </Box>
+    </Container>
   );
 }
 
