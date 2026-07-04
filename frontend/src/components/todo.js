@@ -1,43 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Container, TextField, Button, List, ListItem, ListItemIcon, Checkbox, ListItemText, IconButton, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
 
-function Todo() {
-  const [tasks, setTasks] = useState([]);
+function App() {
+  const [todos, setTodos] = useState([]);
   const [task, setTask] = useState('');
 
-  const addTask = () => {
-    if (task.trim()) {
-      setTasks([...tasks, task]);
-      setTask('');
-    }
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const fetchTodos = async () => {
+    const response = await axios.get('http://localhost:5000/api/todo/todos');
+    setTodos(response.data);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      addTask();
-    }
+  const addTodo = async () => {
+    if (!task) return;
+    await axios.post('http://localhost:5000/api/todo/todos', { task });
+    setTask('');
+    fetchTodos();
+  };
+
+  const toggleComplete = async (todo) => {
+    await axios.put(`http://localhost:5000/api/todo/todos/${todo.id}`, { completed: !todo.completed });
+    fetchTodos();
+  };
+
+  const deleteTodo = async (id) => {
+    await axios.delete(`http://localhost:5000/api/todo/todos/${id}`);
+    fetchTodos();
   };
 
   return (
-    <div>
-      <h1>Todo List</h1>
-      <div style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          placeholder="Enter task"
+    <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        React MUI Todo List
+      </Typography>
+      <div style={{ display: 'flex', marginBottom: '1rem' }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="New Task"
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          onKeyDown={handleKeyDown}
-          style={{ padding: '10px', width: '300px' }}
         />
-        <button onClick={addTask} style={{ padding: '10px', marginLeft: '10px' }}>Add</button>
+        <Button variant="contained" color="primary" style={{ marginLeft: '1rem' }} onClick={addTodo}>
+          Add
+        </Button>
       </div>
-      <ul>
-        {tasks.map((t, index) => (
-          <li key={index}>{t}</li>
+      <List>
+        {todos.map((todo) => (
+          <ListItem key={todo.id} dense button onClick={() => toggleComplete(todo)}>
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={todo.completed}
+                tabIndex={-1}
+                disableRipple
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary={todo.task}
+              style={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                flex: 1,
+              }}
+            />
+            <IconButton edge="end" aria-label="delete" onClick={() => deleteTodo(todo.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Container>
   );
 }
 
-export default Todo;
+export default App;
