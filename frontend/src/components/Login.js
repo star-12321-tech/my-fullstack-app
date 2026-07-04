@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Container, Box, TextField, Button, Typography } from '@mui/material';
@@ -7,6 +7,10 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem('token');
+  }, []);
 
   const handleLogin = async () => {
     try {

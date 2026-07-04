@@ -105,7 +105,7 @@ function Dashboard() {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <Container  maxWidth="xl" sx={{ padding: 4 }}>
+    <Container maxWidth="xxl" sx={{ padding: 5 }}>
       <Typography variant="h4" gutterBottom>
         Crypto Dashboard
       </Typography>
